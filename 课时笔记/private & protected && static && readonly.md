@@ -82,25 +82,14 @@
 
 -	例子：
 		```
-			class Animal {
-				static name: string
-				constructor(name: string) {
-					this.name = name
-				}
+			class Dog {
+				static habit: string = 'sleep'
 			}
-			
-			class Dog extends Animal {
-				constructor(name: string) {
-					super(name)
-				}
-				printName() {
-					console.log(this.name) // 报错
-				}
-			}
-			
-			const dog = new Animal('huahua')
-			console.log(dog.name) // 报错
-			Dog.name // 正常
+
+			let dog = new Dog()
+			console.log(Dog.habit) // sleep
+			console.log(dog.habit) // 报错
+
 		```
 		
 ## readonly
