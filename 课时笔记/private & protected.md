@@ -3,7 +3,7 @@
 ## private: 私有成员    
 
 ### typescript 与 es6 private 的区别：
--   es6的类中只有方法具有private属性
+-   es6的类暂时不支持protected修饰
 
 ### typescript 中的 private
 -   经过 private 修饰后的属性只能通过类本身访问， 在类的外部、实例、子类中都无法访问
