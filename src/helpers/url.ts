@@ -5,10 +5,10 @@ function encode(val: string): string {
     .replace(/%40/g, '@')
     .replace(/%3A/gi, ':')
     .replace(/%24/g, '$')
-    .replace(/$2C/gi, ',')
-    .replace(/$20/g, '+')
-    .replace(/$5B/gi, '[')
-    .replace(/$5D/gi, ']')
+    .replace(/%2C/gi, ',')
+    .replace(/%20/g, '+')
+    .replace(/%5B/gi, '[')
+    .replace(/%5D/gi, ']')
 }
 
 export function buildURL(url: string, params?: any): string {
@@ -36,8 +36,8 @@ export function buildURL(url: string, params?: any): string {
       } else if (isObject(val)) {
         val = JSON.stringify(val)
       }
+      parts.push(`${encode(key)}=${encode(val)}`)
     })
-    parts.push(`${encode(key)}=${encode(val)}`)
   })
 
   let serializedParams = parts.join('&')
