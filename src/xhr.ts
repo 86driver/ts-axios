@@ -1,5 +1,6 @@
 import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from './types'
 import { parseHeaders } from './helpers/headers'
+import { createError } from './helpers/error'
 import { resolve } from 'dns'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
@@ -23,6 +24,10 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         return
       }
 
+      if (request.status === 0) {
+        return
+      }
+
       const responseHeaders = parseHeaders(request.getAllResponseHeaders())
       const responseData = responseType !== 'text' ? request.response : request.responseText
       const response: AxiosResponse = {
@@ -34,15 +39,15 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         request
       }
 
-      resolve(response)
+      handleResponse(response)
     }
 
     request.onerror = function handleError() {
-      reject(new Error('network Error'))
+      reject(createError('network Error', config, null, request))
     }
 
     request.ontimeout = function handleTimeout() {
-      reject(new Error(`Timeout of ${timeout} ms`))
+      reject(createError(`Timeout of ${timeout} ms`, config, 'ECONNABORTED', request))
     }
 
     Object.keys(headers).forEach(name => {
@@ -54,5 +59,21 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     })
 
     request.send(data)
+
+    function handleResponse(response: AxiosResponse): void {
+      if (response.status >= 200 && response.status < 300) {
+        resolve(response)
+      } else {
+        reject(
+          createError(
+            `request failed with status code ${response.status}`,
+            config,
+            null,
+            request,
+            response
+          )
+        )
+      }
+    }
   })
 }
