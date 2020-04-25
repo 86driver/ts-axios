@@ -3,7 +3,7 @@ import { parseHeaders } from './helpers/headers'
 import { resolve } from 'dns'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     const { data = null, url, method = 'get', headers, responseType } = config
 
     const request = new XMLHttpRequest()
@@ -31,6 +31,10 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       }
 
       resolve(response)
+    }
+
+    request.onerror = function handleError() {
+      reject(new Error('network Error'))
     }
 
     Object.keys(headers).forEach(name => {
