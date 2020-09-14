@@ -8,6 +8,7 @@ const WebpackConfig = require('./webpack.config')
 const app = express()
 const compiler = webpack(WebpackConfig)
 
+
 app.use(
   webpackDevMiddleware(compiler, {
     publicPath: '/__build__/',
